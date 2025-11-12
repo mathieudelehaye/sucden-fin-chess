@@ -4,25 +4,21 @@
 #include "antlr4-runtime.h"
 #include "SimpleChessGameLexer.h"
 #include "SimpleChessGameParser.h"
-#include "SimpleChessGameBaseListener.h"
+#include "SimpleChessGameBaseVisitor.h"
 
 using namespace std;
 namespace fs = std::filesystem;
 using namespace antlr4;
 using namespace chess;
 
-// Custom listener to handle parsed moves
-class GameListener : public SimpleChessGameBaseListener {
+// Custom visitor to handle parsed moves
+class GameVisitor : public SimpleChessGameBaseVisitor {
 public:
-    void enterStrike(SimpleChessGameParser::StrikeContext *ctx) override {
+    // Returns a value
+    std::any visitStrike(SimpleChessGameParser::StrikeContext *ctx) override {
         string from = ctx->COORD(0)->getText();
         string to = ctx->COORD(1)->getText();
-        cout << "Move: " << from << " -> " << to << endl;
-    }
-    
-    void enterComment(SimpleChessGameParser::CommentContext *ctx) override {
-        string comment = ctx->COMMENT()->getText();
-        cout << "Comment: " << comment;
+        return make_pair(from, to);  // Can return data
     }
 };
 
@@ -56,8 +52,8 @@ int main() {
     tree::ParseTree *tree = parser.game();
     
     // Walk the parse tree with our custom listener
-    GameListener listener;
-    tree::ParseTreeWalker::DEFAULT.walk(&listener, tree);
+    GameVisitor visitor;;
+    auto result = visitor.visit(tree);
     
     cout << "\nParsing completed successfully!" << endl;
 

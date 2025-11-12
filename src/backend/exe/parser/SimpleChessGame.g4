@@ -17,4 +17,5 @@ strike
 
 // Lexer rules
 COORD: [a-h][1-8];
-COMMENT: '//' ~[\r\n]* '\r'? '\n';
+COMMENT: '//' ~[\r\n]*;
+WS: [ \t\r\n]+ -> skip;

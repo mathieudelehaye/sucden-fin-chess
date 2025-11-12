@@ -16,7 +16,7 @@ include(SetupANTLR)
 antlr_target(SimpleChessGameParser 
     ${CMAKE_CURRENT_SOURCE_DIR}/parser/SimpleChessGame.g4
     PACKAGE chess
-    LISTENER
+    VISITOR
 )
 
 # Automatically find source files
