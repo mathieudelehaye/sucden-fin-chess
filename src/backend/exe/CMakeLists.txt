@@ -1,13 +1,40 @@
 # Set executable name
 set(EXE_NAME chess_server)
 
+# Include ANTLR setup
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+include(SetupANTLR)
+
+# Generate parser from grammar
+antlr_target(SimpleChessGameParser 
+    ${CMAKE_CURRENT_SOURCE_DIR}/parser/SimpleChessGame.g4
+    PACKAGE chess
+    LISTENER
+)
+
 # Automatically find source files
 file(GLOB_RECURSE EXE_SOURCES CONFIGURE_DEPENDS
     "${CMAKE_CURRENT_SOURCE_DIR}/*.cpp"
 )
 
 # Add executable to build
-add_executable(${EXE_NAME} ${EXE_SOURCES})
+add_executable(${EXE_NAME} 
+    ${EXE_SOURCES}
+    ${ANTLR_SimpleChessGameParser_CXX_OUTPUTS}
+)
+
+# Include headers
+target_include_directories(${EXE_NAME} 
+    PRIVATE 
+    "${antlr_SOURCE_DIR}/runtime/Cpp/runtime/src"
+    ${ANTLR_SimpleChessGameParser_OUTPUT_DIR}
+)
+
+# Link libraries
+target_link_libraries(${EXE_NAME} 
+    PRIVATE 
+    antlr4_shared
+)
 
 # Set optimization flags for Release build
 if(CMAKE_BUILD_TYPE STREQUAL "Release")

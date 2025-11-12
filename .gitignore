@@ -8,6 +8,8 @@
 *.obj
 *.jar
 
+bin/
+
 # Precompiled Headers
 *.gch
 *.pch
