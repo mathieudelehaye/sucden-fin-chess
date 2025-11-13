@@ -3,7 +3,7 @@
 #include <iostream>
 #include <vector>
 
-#include "parser/GameVisitor.h"
+#include "GameVisitor.hpp"
 
 using namespace std;
 using namespace antlr4;

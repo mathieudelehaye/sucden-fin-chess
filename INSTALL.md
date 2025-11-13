@@ -1,2 +1,43 @@
-- You must install Java 11+ to run the Antlr Scanner/Parser generator
-- Bla
+- Install Java 11+ at system level:
+```
+sudo apt update
+sudo apt install openjdk-17-jdk -y      # here I used JDK 17
+sudo update-alternatives --config java  # select which version of Java to use if multiple ones are installed. 
+java -version                           # check the installed selected version.
+```
+
+- Install doxygen and graphviz at system level:
+```
+sudo apt update
+sudo apt install doxygen graphviz
+```
+
+- Install dependencies in local package manager (vcpkg):
+```
+cd ~
+git clone https://github.com/microsoft/vcpkg.git
+./vcpkg/bootstrap-vcpkg.sh
+./vcpkg/vcpkg install ...
+```
+
+- To build and run the backend server:
+```
+cd /path/to/project/root
+
+rm -rf build/backend/debug
+
+cmake \
+  -S src/backend \
+  -B build/backend/debug \
+  -G "Ninja" \
+  -DCMAKE_BUILD_TYPE=Debug 
+
+cmake --build build/backend/debug -j$(nproc)
+
+./bin/backend/chess_server
+```
+
+- To generate the documentation (not auto-generated on every build):
+```
+cmake --build build/backend/debug/ --target docs
+```

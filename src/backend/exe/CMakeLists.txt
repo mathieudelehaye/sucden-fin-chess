@@ -1,6 +1,12 @@
 # Set executable name
 set(EXE_NAME chess_server)
 
+# Path to cmake scripts
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
+
+# Include Doxygen setup
+include(SetupDoxygen)
+
 # Include ANTLR setup
 # 
 # TODO: use an external dependency manager like vcpkg,
@@ -8,13 +14,11 @@ set(EXE_NAME chess_server)
 # downloading the ANTLR tool again.
 # But it requires more work: https://shybovycha.github.io/2022/11/07/configscript-parser.html#:~:text=ANTLR%20version%20incompatibility
 # 
-
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 include(SetupANTLR)
 
 # Generate parser from grammar
 antlr_target(SimpleChessGameParser 
-    ${CMAKE_CURRENT_SOURCE_DIR}/parser/SimpleChessGame.g4
+    ${CMAKE_CURRENT_SOURCE_DIR}/models/parser/SimpleChessGame.g4
     PACKAGE chess
     VISITOR
 )
@@ -31,15 +35,22 @@ add_executable(${EXE_NAME}
 )
 
 # Include dependency headers - use SYSTEM to suppress warnings
-target_include_directories(${EXE_NAME} 
-    SYSTEM PRIVATE 
-    "${antlr_SOURCE_DIR}/runtime/Cpp/runtime/src"
+target_include_directories(${EXE_NAME} SYSTEM PRIVATE 
+    "${ANTLR_SOURCE_DIR}/runtime/Cpp/runtime/src"
 )
 
-# Include other headers
-target_include_directories(${EXE_NAME}
-    PRIVATE
+# Include project headers
+target_include_directories(${EXE_NAME} PRIVATE
     ${ANTLR_SimpleChessGameParser_OUTPUT_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}        
+    ${CMAKE_CURRENT_SOURCE_DIR}/controllers
+    ${CMAKE_CURRENT_SOURCE_DIR}/models
+    ${CMAKE_CURRENT_SOURCE_DIR}/models/parser
+    ${CMAKE_CURRENT_SOURCE_DIR}/views
+    ${CMAKE_CURRENT_SOURCE_DIR}/transport
+    ${CMAKE_CURRENT_SOURCE_DIR}/transport/session
+    ${CMAKE_CURRENT_SOURCE_DIR}/transport/posix
+    ${CMAKE_CURRENT_SOURCE_DIR}/utils
 )
 
 # Link libraries

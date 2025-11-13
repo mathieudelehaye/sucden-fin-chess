@@ -1,4 +1,4 @@
-#include "GameVisitor.h"
+#include "GameVisitor.hpp"
 
 std::any GameVisitor::visitStrike(SimpleChessGameParser::StrikeContext *ctx) {
     std::string from = ctx->COORD(0)->getText();

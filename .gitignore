@@ -8,6 +8,9 @@
 *.obj
 *.jar
 
+doc/backend/
+doc/frontend/
+
 bin/
 download/
 .vscode/
